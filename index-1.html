@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VibeCut — AI Video Editor</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ── NOISE OVERLAY ─────────────────────────────── -->
+  <div class="noise"></div>
+
+  <!-- ── HEADER ────────────────────────────────────── -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-v">V</span>IBE<span class="logo-cut">CUT</span>
+    </div>
+    <p class="tagline">Beat-synced AI video edits — in seconds</p>
+  </header>
+
+  <!-- ── MAIN CARD ──────────────────────────────────── -->
+  <main class="main">
+
+    <!-- STEP 1: Upload Zone -->
+    <section class="card" id="upload-section">
+      <div class="step-label">STEP 01</div>
+      <h2 class="section-title">Drop Your Files</h2>
+
+      <div class="upload-grid">
+
+        <!-- Video Upload -->
+        <div class="upload-zone" id="video-zone">
+          <input type="file" id="video-input" accept="video/*" hidden />
+          <div class="upload-icon">🎬</div>
+          <p class="upload-title">Video Clip</p>
+          <p class="upload-sub">MP4, MOV, AVI, MKV</p>
+          <button class="upload-btn" onclick="document.getElementById('video-input').click()">
+            Choose File
+          </button>
+          <p class="file-name" id="video-name">No file selected</p>
+        </div>
+
+        <!-- Audio Upload -->
+        <div class="upload-zone" id="audio-zone">
+          <input type="file" id="audio-input" accept="audio/*" hidden />
+          <div class="upload-icon">🎵</div>
+          <p class="upload-title">Music Track</p>
+          <p class="upload-sub">MP3, WAV, M4A, AAC</p>
+          <button class="upload-btn" onclick="document.getElementById('audio-input').click()">
+            Choose File
+          </button>
+          <p class="file-name" id="audio-name">No file selected</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STEP 2: Template Select -->
+    <section class="card" id="template-section">
+      <div class="step-label">STEP 02</div>
+      <h2 class="section-title">Pick Your Vibe</h2>
+
+      <div class="template-grid">
+
+        <div class="template-card active" data-template="hype">
+          <div class="template-glow hype-glow"></div>
+          <div class="template-icon">⚡</div>
+          <h3>HYPE</h3>
+          <p>Fast cuts · High contrast · Every beat</p>
+          <div class="template-tag">TRENDING</div>
+        </div>
+
+        <div class="template-card" data-template="anime">
+          <div class="template-glow anime-glow"></div>
+          <div class="template-icon">🌸</div>
+          <h3>ANIME</h3>
+          <p>Warm grade · Flash transitions · Saturated</p>
+        </div>
+
+        <div class="template-card" data-template="cinematic">
+          <div class="template-glow cinema-glow"></div>
+          <div class="template-icon">🎞️</div>
+          <h3>CINEMATIC</h3>
+          <p>Teal-orange · Slower cuts · Film grade</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STEP 3: Process Button -->
+    <section class="card action-card" id="process-section">
+      <div class="step-label">STEP 03</div>
+      <h2 class="section-title">Generate Edit</h2>
+
+      <button class="process-btn" id="process-btn" onclick="startProcessing()">
+        <span class="btn-text">⚡ CREATE MY EDIT</span>
+        <div class="btn-shine"></div>
+      </button>
+
+      <p class="process-note">Processing takes 1–3 minutes depending on video length</p>
+    </section>
+
+    <!-- PROGRESS PANEL (hidden until processing starts) -->
+    <section class="card progress-card" id="progress-section" style="display:none;">
+      <div class="progress-header">
+        <span class="pulse-dot"></span>
+        <span id="progress-message">Processing…</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+        <div class="progress-glow" id="progress-glow"></div>
+      </div>
+      <div class="progress-pct" id="progress-pct">0%</div>
+
+      <div class="progress-steps">
+        <div class="pstep" id="pstep-beats">🎵 Beat detection</div>
+        <div class="pstep" id="pstep-scenes">🎬 Scene analysis</div>
+        <div class="pstep" id="pstep-render">✂️ Cutting & rendering</div>
+        <div class="pstep" id="pstep-grade">🎨 Color grading</div>
+      </div>
+    </section>
+
+    <!-- RESULT PANEL (hidden until done) -->
+    <section class="card result-card" id="result-section" style="display:none;">
+      <div class="result-badge">🔥 EDIT READY</div>
+      <h2 class="section-title">Your VibeCut is done!</h2>
+
+      <video id="result-video" controls class="result-video"></video>
+
+      <div class="result-actions">
+        <a id="download-btn" class="download-btn" download="vibecut_edit.mp4">
+          ⬇ DOWNLOAD VIDEO
+        </a>
+        <button class="reset-btn" onclick="resetApp()">Make Another</button>
+      </div>
+    </section>
+
+    <!-- ERROR PANEL -->
+    <section class="card error-card" id="error-section" style="display:none;">
+      <div class="error-icon">⚠️</div>
+      <h2>Something went wrong</h2>
+      <p id="error-message"></p>
+      <button class="reset-btn" onclick="resetApp()">Try Again</button>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ─────────────────────────────────────── -->
+  <footer class="footer">
+    <p>VibeCut · AI-powered beat-sync editing · Built with ❤️ + FFmpeg + librosa</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
